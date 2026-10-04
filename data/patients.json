@@ -492,7 +492,7 @@
         "confidence": "model-generated"
       },
       "language": "en",
-      "createdAt": "2026-10-04T18:12:02.460Z"
+      "createdAt": "2026-10-04T18:22:51.689Z"
     },
     "documents": [
       {
@@ -801,5 +801,470 @@
       "reasons": []
     },
     "status": "intake_complete"
+  },
+  {
+    "id": "4d15df58-9373-4c10-b11a-d1185641cf69",
+    "name": "",
+    "language": "en",
+    "createdAt": "2026-10-04T18:23:51.046Z",
+    "voiceIntake": {
+      "transcript": "a headache and running nose",
+      "structuredHistory": {
+        "chiefComplaint": "headache and running nose",
+        "symptoms": [
+          "headache",
+          "running nose"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T18:23:59.525Z"
+    },
+    "documents": [
+      {
+        "id": "321051c3-fa92-4c5b-ba1c-6b4caeed3262",
+        "fileName": "prescription2.png",
+        "documentType": "prescription",
+        "extractedText": "Prescription for Rahul Verma by Dr. Priya Sharma for fever, cough, and cold including Paracetamol, Amoxicillin, Cetirizine, and Vitamin C.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. Priya Sharma",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 years",
+          "weight": "72 kg",
+          "address": "Sunrise Health Clinic, 123 Wellness Drive, Green Park, New Delhi – 110016",
+          "importantDetails": [
+            "Complaint: Fever, cough, cold (follow-up)",
+            "Patient ID: SC-45872",
+            "Visit Type: OPD",
+            "Date: 04 Oct 2026"
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Thrice daily (after meals)",
+              "duration": "3 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin 500 mg Capsule",
+              "dosage": "1 capsule",
+              "frequency": "Twice daily (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine 10 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [],
+          "advice": "Drink plenty of fluids and get adequate rest. If symptoms worsen or persist beyond 5 days, please revisit the clinic. Avoid self-medication and do not stop antibiotics prematurely."
+        },
+        "createdAt": "2026-10-04T18:24:33.250Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "13002e36-0a60-4460-9de0-3c2dd8c7acc5",
+    "name": "test patient 13",
+    "language": "en",
+    "createdAt": "2026-10-04T18:31:20.200Z",
+    "voiceIntake": {
+      "transcript": "weakness and vertigo",
+      "structuredHistory": {
+        "chiefComplaint": "weakness and vertigo",
+        "symptoms": [
+          "weakness",
+          "vertigo"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T18:31:20.210Z"
+    },
+    "documents": [
+      {
+        "id": "0071def8-d355-4d53-8a24-e6c2e213695e",
+        "fileName": "prescription2.png",
+        "documentType": "prescription",
+        "extractedText": "Prescription for Rahul Verma by Dr. Priya Sharma containing medications for fever, cough, and cold.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. Priya Sharma",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 years",
+          "weight": "72 kg",
+          "address": "123 Wellness Drive, Green Park, New Delhi – 110016",
+          "importantDetails": [
+            "Complaint: Fever, cough, cold (follow-up)",
+            "Drink plenty of fluids and get adequate rest",
+            "If symptoms worsen or persist beyond 5 days, please revisit the clinic",
+            "Avoid self-medication and do not stop antibiotics prematurely"
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Thrice daily (after meals)",
+              "duration": "3 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin 500 mg Capsule",
+              "dosage": "1 capsule",
+              "frequency": "Twice daily (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine 10 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [],
+          "advice": "Drink plenty of fluids and get adequate rest. If symptoms worsen or persist beyond 5 days, please revisit the clinic. Avoid self-medication and do not stop antibiotics prematurely."
+        },
+        "createdAt": "2026-10-04T18:31:44.673Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "3727af2d-f8ee-4295-bf1c-bacd86a5e031",
+    "name": "",
+    "language": "en",
+    "createdAt": "2026-10-04T18:35:53.703Z",
+    "voiceIntake": {
+      "transcript": "headache with stomach ache",
+      "structuredHistory": {
+        "chiefComplaint": "headache with stomach ache",
+        "symptoms": [
+          "headache",
+          "stomach ache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T18:35:53.712Z"
+    },
+    "documents": [
+      {
+        "id": "53bbc3c5-4d0e-4b60-9596-630b2adc1b43",
+        "fileName": "Lab Report and Handwritten Prescription.png",
+        "documentType": "mixed",
+        "extractedText": "Lab report and prescription for Rahul Verma showing borderline low hemoglobin, with prescribed medications including Paracetamol, Amoxicillin, Cetirizine, and Vitamin C.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. S. Mehta",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 / Male",
+          "weight": "72 kg",
+          "address": "45, Sector 17, New Delhi - 110017",
+          "importantDetails": [
+            "Hemoglobin is slightly below the reference range (13.2 g/dL, ref: 13.5 - 17.5)"
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine",
+              "dosage": "10 mg",
+              "frequency": "OD (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C",
+              "dosage": "500 mg",
+              "frequency": "OD (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [
+            {
+              "testName": "Hemoglobin (Hb)",
+              "result": "13.2",
+              "unit": "g/dL",
+              "referenceRange": "13.5 - 17.5",
+              "flag": "low",
+              "confidence": "high"
+            },
+            {
+              "testName": "Total Leucocyte Count (TLC)",
+              "result": "8,200",
+              "unit": "/uL",
+              "referenceRange": "4,000 - 11,000",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Platelet Count",
+              "result": "2.4",
+              "unit": "lakh/uL",
+              "referenceRange": "1.5 - 4.5",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Fasting Blood Sugar (FBS)",
+              "result": "96",
+              "unit": "mg/dL",
+              "referenceRange": "70 - 110",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Serum Creatinine",
+              "result": "0.9",
+              "unit": "mg/dL",
+              "referenceRange": "0.7 - 1.3",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGPT (ALT)",
+              "result": "32",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGOT (AST)",
+              "result": "28",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            }
+          ],
+          "advice": "Keep yourself well hydrated. Avoid oily/spicy food. If symptoms persist or worsen, consult again. Do not self medicate."
+        },
+        "createdAt": "2026-10-04T18:36:08.146Z"
+      }
+    ],
+    "summary": {
+      "text": "Patient Rahul Verma presents with a headache and stomach ache. Lab results show borderline low hemoglobin at 13.2 g/dL, with normal TLC, platelet count, fasting blood sugar, serum creatinine, SGPT, and SGOT. Prescribed medications include Paracetamol, Amoxicillin, Cetirizine, and Vitamin C.",
+      "flags": [
+        "Symptom duration not provided"
+      ],
+      "generatedAt": "2026-10-04T18:37:19.876Z"
+    },
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "summary_ready"
+  },
+  {
+    "id": "aefa0e6d-4c98-494f-909c-6d261577c50d",
+    "name": "",
+    "language": "en",
+    "createdAt": "2026-10-04T19:07:19.026Z",
+    "voiceIntake": {
+      "transcript": "running nose and headache",
+      "structuredHistory": {
+        "chiefComplaint": "running nose and bad headache",
+        "symptoms": [
+          "running nose",
+          "bad headache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T19:07:19.248Z"
+    },
+    "documents": [
+      {
+        "id": "a4eaa174-a094-4a63-9205-c634f07670f7",
+        "fileName": "Lab Report and Handwritten Prescription.png",
+        "documentType": "mixed",
+        "extractedText": "Lab report and prescription for Rahul Verma showing normal lab parameters and a 5-day course of medications prescribed by Dr. S. Mehta.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. S. Mehta",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 / Male",
+          "weight": "72 kg",
+          "address": "45, Sector 17, New Delhi - 110017",
+          "importantDetails": [
+            "All lab parameters are within normal limits"
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine",
+              "dosage": "10 mg",
+              "frequency": "OD (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C",
+              "dosage": "500 mg",
+              "frequency": "OD (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [
+            {
+              "testName": "Hemoglobin (Hb)",
+              "result": "13.2",
+              "unit": "g/dL",
+              "referenceRange": "13.5 - 17.5",
+              "flag": "low",
+              "confidence": "high"
+            },
+            {
+              "testName": "Total Leucocyte Count (TLC)",
+              "result": "8,200",
+              "unit": "/µL",
+              "referenceRange": "4,000 - 11,000",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Platelet Count",
+              "result": "2.4",
+              "unit": "lakh/µL",
+              "referenceRange": "1.5 - 4.5",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Fasting Blood Sugar (FBS)",
+              "result": "96",
+              "unit": "mg/dL",
+              "referenceRange": "70 - 110",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Serum Creatinine",
+              "result": "0.9",
+              "unit": "mg/dL",
+              "referenceRange": "0.7 - 1.3",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGPT (ALT)",
+              "result": "32",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGOT (AST)",
+              "result": "28",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            }
+          ],
+          "advice": "Keep yourself well hydrated. Avoid oily/spicy food. If symptoms persist or worsen, consult again. Do not self medicate."
+        },
+        "createdAt": "2026-10-04T19:08:05.022Z",
+        "editedAt": "2026-10-04T19:08:51.751Z"
+      }
+    ],
+    "summary": {
+      "text": "Rahul Verma presents with a running nose and bad headache of unspecified duration. Lab investigations show Hemoglobin is low at 13.2 g/dL, with remaining parameters within normal limits. A prescription by Dr. S. Mehta includes Paracetamol 500 mg TID, Amoxicillin 500 mg TID, Cetirizine 10 mg OD, and Vitamin C 500 mg OD.",
+      "flags": [
+        "Symptom duration is unspecified."
+      ],
+      "generatedAt": "2026-10-04T19:08:54.137Z"
+    },
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "summary_ready"
   }
 ]

@@ -86,13 +86,14 @@ async function extractStructuredHistory(transcript, language) {
 async function generateSummary(structuredHistory, documents) {
 	if (!config.geminiApiKey) {
 		return {
-			text: 'The patient reports fever, headache, and mild cough for three days. The prescription lists Paracetamol 500mg three times daily for three days and Azithromycin 250mg once daily for five days; rest and follow-up were advised.',
-			flags: ['duration_over_72h'],
-			mock: true,
+			text: 'Gemini summary is unavailable because the AI service is not configured.',
+			flags: [],
+			mock: false,
+			degraded: true,
 		};
 	}
 
-	const systemPrompt = 'Draft a concise clinical summary for a doctor to quickly review, based ONLY on the structured history and document extractions provided. Never invent facts. Flag anything needing attention, including symptom duration over 3 days, possible drug interactions between medicationsMentioned and newly extracted medications, missing data, and any extracted fields with low confidence that are worth double-checking. Respond ONLY with strict JSON matching this shape: { "text": string, "flags": string[] }.';
+	const systemPrompt = 'Write a brief clinical summary in 2-3 concise sentences for a doctor. Include the patient\'s current chief complaint and relevant symptom duration/history when provided, then the most important findings or medication details from the uploaded documents. Use ONLY facts present in the structured history and document extractions; never infer or invent information. If a detail is missing or marked low confidence, do not state it as fact and add a concise review flag when clinically relevant. Respond ONLY with strict JSON matching this shape: { "text": string, "flags": string[] }.';
 	try {
 		const result = await callGemini(systemPrompt, JSON.stringify({ structuredHistory, documents }));
 		return { ...JSON.parse(result), mock: false };

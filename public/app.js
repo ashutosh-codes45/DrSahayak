@@ -56,6 +56,10 @@ const documentFileInput = document.getElementById('document-file');
 const nativeCameraInput = document.getElementById('camera-native-input');
 const submitDocumentButton = document.getElementById('submit-document');
 const documentResult = document.getElementById('document-result');
+const summaryPanel = document.getElementById('summary-panel');
+const generateSummaryButton = document.getElementById('generate-summary');
+const summaryStatus = document.getElementById('summary-status');
+const summaryResult = document.getElementById('summary-result');
 
 function showAuthMessage(message, type = 'error') {
 	authMessage.textContent = message;
@@ -269,6 +273,96 @@ async function readApiData(response) {
 	return result.data;
 }
 
+async function saveIntakeChanges(changes, statusElement, button) {
+	if (!currentPatientId) {
+		statusElement.textContent = 'Create or select a patient before saving edits.';
+		statusElement.className = 'intake-edit-status error';
+		return;
+	}
+
+	const originalLabel = button.textContent;
+	button.disabled = true;
+	button.textContent = 'Saving…';
+	statusElement.textContent = 'Saving changes…';
+	statusElement.className = 'intake-edit-status';
+	try {
+		const token = localStorage.getItem('drsahayakToken');
+		const response = await fetch(`/api/patients/${encodeURIComponent(currentPatientId)}/intake`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				...(token ? { Authorization: `Bearer ${token}` } : {}),
+			},
+			body: JSON.stringify(changes),
+		});
+		const data = await readApiData(response);
+		setActivePatient(data.patient);
+		statusElement.textContent = 'Changes saved. Regenerate the summary if needed.';
+		statusElement.className = 'intake-edit-status success';
+	} catch (error) {
+		statusElement.textContent = error.message || 'Could not save changes.';
+		statusElement.className = 'intake-edit-status error';
+	} finally {
+		button.disabled = false;
+		button.textContent = originalLabel;
+	}
+}
+
+function renderVoiceIntakeResult(data) {
+	const intake = data.patient.voiceIntake;
+	voiceResult.replaceChildren();
+	voiceResult.hidden = false;
+	voiceResult.classList.toggle('error', Boolean(data.transcriptionDegraded || data.historyDegraded));
+
+	if (data.transcriptionDegraded || data.historyDegraded) {
+		const warning = document.createElement('p');
+		warning.className = 'intake-edit-warning';
+		warning.textContent = data.transcriptionDegraded
+			? 'Transcription may be incomplete. Review and edit it before using it clinically.'
+			: 'Chief complaint extraction is unavailable. Review the transcript and enter the complaint manually.';
+		voiceResult.append(warning);
+	}
+
+	const label = document.createElement('label');
+	label.className = 'intake-edit-field';
+	const labelText = document.createElement('span');
+	labelText.textContent = data.mock ? 'Demo transcript' : 'Transcript';
+	const transcriptInput = document.createElement('textarea');
+	transcriptInput.className = 'intake-edit-input voice-transcript-input';
+	transcriptInput.rows = 4;
+	transcriptInput.value = intake.transcript || '';
+	transcriptInput.setAttribute('aria-label', 'Voice transcript');
+	label.append(labelText, transcriptInput);
+	voiceResult.append(label);
+
+	if (!data.historyDegraded && !data.transcriptionDegraded) {
+		const complaint = document.createElement('p');
+		complaint.className = 'voice-intake-complaint';
+		complaint.textContent = `Chief Complaint: ${intake.structuredHistory?.chiefComplaint?.trim() || 'Not specified'}`;
+		voiceResult.append(complaint);
+	}
+
+	const urgency = document.createElement('p');
+	urgency.className = 'voice-intake-urgency';
+	urgency.textContent = `Urgency: ${data.patient.urgency?.level || 'low'}`;
+	voiceResult.append(urgency);
+
+	const actions = document.createElement('div');
+	actions.className = 'intake-edit-actions';
+	const saveButton = document.createElement('button');
+	saveButton.type = 'button';
+	saveButton.className = 'btn-secondary';
+	saveButton.textContent = 'Save Transcript';
+	const status = document.createElement('p');
+	status.className = 'intake-edit-status';
+	status.hidden = true;
+	saveButton.addEventListener('click', () => saveIntakeChanges({
+		voiceTranscript: transcriptInput.value,
+	}, status, saveButton));
+	actions.append(saveButton, status);
+	voiceResult.append(actions);
+}
+
 function createDetailSection(title) {
 	const section = document.createElement('section');
 	section.className = 'detail-section';
@@ -289,14 +383,24 @@ function appendDetailField(section, label, value) {
 
 function renderPatientDetails(patient) {
 	detailContent.replaceChildren();
+	const header = document.createElement('div');
+	header.className = 'patient-detail-header';
 	const heading = document.createElement('h2');
 	heading.textContent = patient.name || 'Unnamed patient';
-	detailContent.append(heading);
+	header.append(heading);
+	const urgencyLevel = patient.urgency?.level?.toLowerCase();
+	if (urgencyLevel) {
+		const urgencyBadge = document.createElement('span');
+		urgencyBadge.className = `urgency-badge ${urgencyLevel}`;
+		const urgencyScore = patient.urgency.score;
+		urgencyBadge.textContent = `${urgencyLevel[0].toUpperCase()}${urgencyLevel.slice(1)}${urgencyScore == null ? '' : ` · ${urgencyScore}`}`;
+		header.append(urgencyBadge);
+	}
+	detailContent.append(header);
 
 	const overview = createDetailSection('Patient');
 	appendDetailField(overview, 'Language', patient.language);
 	appendDetailField(overview, 'Status', patient.status);
-	appendDetailField(overview, 'Urgency', patient.urgency?.level);
 	detailContent.append(overview);
 
 	const history = patient.voiceIntake?.structuredHistory;
@@ -375,6 +479,16 @@ queueList.addEventListener('click', (event) => {
 	selectPatient(patientId);
 });
 
+queueList.addEventListener('keydown', (event) => {
+	if (event.key !== 'Enter' && event.key !== ' ') return;
+	const card = event.target.closest?.('.queue-item');
+	if (!card || !queueList.contains(card)) return;
+	event.preventDefault();
+	const patientId = card.dataset.patientId;
+	console.log('patient card clicked', patientId);
+	selectPatient(patientId);
+});
+
 async function loadQueue() {
 	console.log('loadQueue called');
 	queueList.replaceChildren(Object.assign(document.createElement('li'), {
@@ -400,13 +514,28 @@ async function loadQueue() {
 			item.className = 'queue-item';
 			item.dataset.patientId = patient.id;
 			item.classList.toggle('selected', patient.id === selectedPatientId);
+			item.tabIndex = 0;
+			item.setAttribute('role', 'button');
+			item.setAttribute('aria-pressed', String(patient.id === selectedPatientId));
+			const header = document.createElement('div');
+			header.className = 'queue-item-header';
 			const name = document.createElement('div');
 			name.className = 'name';
 			name.textContent = patient.name || 'Unnamed patient';
+			header.append(name);
+			const urgencyLevel = patient.urgency?.level?.toLowerCase();
+			if (urgencyLevel) {
+				const priority = document.createElement('span');
+				priority.className = `queue-priority ${urgencyLevel}`;
+				priority.textContent = `${urgencyLevel[0].toUpperCase()}${urgencyLevel.slice(1)}${patient.urgency.score == null ? '' : ` · ${patient.urgency.score}`}`;
+				header.append(priority);
+			}
 			const meta = document.createElement('div');
 			meta.className = 'meta';
-			meta.textContent = `${patient.status || 'new'} · ${patient.documentCount || 0} document(s)`;
-			item.append(name, meta);
+			const status = (patient.status || 'new').replaceAll('_', ' ');
+			const intakeType = patient.hasVoiceIntake ? 'Voice intake' : 'Document only';
+			meta.textContent = `${status} · ${intakeType} · ${patient.documentCount || 0} docs`;
+			item.append(header, meta);
 			return item;
 		}));
 	} catch (error) {
@@ -543,14 +672,7 @@ submitVoiceButton.addEventListener('click', async () => {
 		const response = await fetch('/api/voice/intake', { method: 'POST', body: formData });
 		const data = await readApiData(response);
 		setActivePatient(data.patient);
-		const intake = data.patient.voiceIntake;
-		if (data.transcriptionDegraded) {
-			setResult(voiceResult, `Transcription is unavailable. The saved transcript may be incomplete, so the urgency score needs manual review.\n\n${intake.transcript}`, true);
-		} else if (data.historyDegraded) {
-			setResult(voiceResult, `Transcript:\n${intake.transcript}\n\nAutomatic symptom extraction is temporarily unavailable. Review the transcript and urgency manually.`, true);
-		} else {
-			setResult(voiceResult, `${data.mock ? 'Demo transcript' : 'Transcript'}:\n${intake.transcript}\n\nUrgency: ${data.patient.urgency?.level || 'low'}`);
-		}
+		renderVoiceIntakeResult(data);
 	} catch (error) {
 		setResult(voiceResult, error.message, true);
 	} finally {
@@ -664,7 +786,7 @@ function createDocumentSection(title) {
 	return section;
 }
 
-function createClinicalTable(headers, rows, flagColumnIndex = -1, confidenceColumnIndex = -1) {
+function createClinicalTable(headers, rows, listName, editableFields, flagColumnIndex = -1, confidenceColumnIndex = -1) {
 	const wrapper = document.createElement('div');
 	wrapper.className = 'clinical-table-wrapper';
 	const table = document.createElement('table');
@@ -679,24 +801,26 @@ function createClinicalTable(headers, rows, flagColumnIndex = -1, confidenceColu
 	head.append(headerRow);
 	table.append(head);
 	const body = document.createElement('tbody');
-	rows.forEach((values) => {
+	rows.forEach((values, rowIndex) => {
 		const row = document.createElement('tr');
 		values.forEach((value, index) => {
 			const cell = document.createElement('td');
 			const flag = String(value || '').toLowerCase();
+			const input = document.createElement('input');
+			input.type = 'text';
+			input.className = 'clinical-cell-input';
+			input.value = value == null ? '' : String(value);
+			input.dataset.editList = listName;
+			input.dataset.editRow = String(rowIndex);
+			input.dataset.editField = editableFields[index];
+			input.setAttribute('aria-label', `${headers[index]}, row ${rowIndex + 1}`);
 			if (index === confidenceColumnIndex && ['high', 'medium', 'low'].includes(flag)) {
-				const confidence = document.createElement('span');
-				confidence.className = `extraction-confidence ${flag}`;
-				confidence.textContent = flag === 'low' ? 'Low - verify' : flag;
-				cell.append(confidence);
-			} else if (index === flagColumnIndex && ['high', 'low', 'normal', 'abnormal'].includes(flag)) {
-				const flagBadge = document.createElement('span');
-				flagBadge.className = `lab-flag ${flag}`;
-				flagBadge.textContent = value;
-				cell.append(flagBadge);
-			} else {
-				cell.textContent = value || 'Not stated';
+				input.dataset.confidence = flag;
 			}
+			if (index === flagColumnIndex && ['high', 'low', 'normal', 'abnormal'].includes(flag)) {
+				input.dataset.flag = flag;
+			}
+			cell.append(input);
 			row.append(cell);
 		});
 		body.append(row);
@@ -736,6 +860,15 @@ function renderDocumentExtraction(documentRecord, patient) {
 	typeBadge.textContent = displayType;
 	header.append(titleBlock, typeBadge);
 	card.append(header);
+
+	const extractedTextSection = createDocumentSection('Extracted text');
+	const extractedTextInput = document.createElement('textarea');
+	extractedTextInput.className = 'intake-edit-input document-text-input';
+	extractedTextInput.rows = 3;
+	extractedTextInput.value = documentRecord.extractedText || '';
+	extractedTextInput.setAttribute('aria-label', 'Extracted document text');
+	extractedTextSection.append(extractedTextInput);
+	card.append(extractedTextSection);
 
 	if (documentRecord.degraded || readability === 'unreadable' || documentRecord.extractedText?.startsWith('[Extraction unavailable')) {
 		const message = document.createElement('p');
@@ -810,6 +943,8 @@ function renderDocumentExtraction(documentRecord, patient) {
 					medication.duration,
 					medication.confidence,
 				]),
+				'medications',
+				['name', 'dosage', 'frequency', 'duration', 'confidence'],
 				-1,
 				4,
 			));
@@ -829,6 +964,8 @@ function renderDocumentExtraction(documentRecord, patient) {
 					result.flag,
 					result.confidence,
 				]),
+				'labResults',
+				['testName', 'result', 'unit', 'referenceRange', 'flag', 'confidence'],
 				4,
 				5,
 			));
@@ -841,6 +978,36 @@ function renderDocumentExtraction(documentRecord, patient) {
 			card.append(labSection);
 		}
 	}
+
+	const editActions = document.createElement('div');
+	editActions.className = 'intake-edit-actions';
+	const saveButton = document.createElement('button');
+	saveButton.type = 'button';
+	saveButton.className = 'btn-secondary';
+	saveButton.textContent = 'Save Document Edits';
+	saveButton.disabled = !documentRecord.id;
+	const editStatus = document.createElement('p');
+	editStatus.className = 'intake-edit-status';
+	editStatus.hidden = true;
+	saveButton.addEventListener('click', () => {
+		const updatedFields = JSON.parse(JSON.stringify(fields));
+		card.querySelectorAll('.clinical-cell-input').forEach((input) => {
+			const rows = updatedFields[input.dataset.editList];
+			const row = rows?.[Number(input.dataset.editRow)];
+			if (row && input.dataset.editField) {
+				row[input.dataset.editField] = input.value;
+			}
+		});
+		saveIntakeChanges({
+			documents: [{
+				id: documentRecord.id,
+				extractedText: extractedTextInput.value,
+				extractedFields: updatedFields,
+			}],
+		}, editStatus, saveButton);
+	});
+	editActions.append(saveButton, editStatus);
+	card.append(editActions);
 
 	documentResult.replaceChildren(card);
 	documentResult.classList.remove('error');
@@ -862,11 +1029,17 @@ async function submitDocument(file) {
 	const originalLabel = submitButton.textContent;
 	submitButton.textContent = 'Extracting document…';
 	setResult(documentResult, '');
+	summaryPanel.hidden = true;
+	summaryResult.hidden = true;
+	summaryResult.textContent = '';
+	summaryStatus.hidden = true;
+	summaryStatus.textContent = '';
 	try {
 		const response = await fetch('/api/ocr/scan', { method: 'POST', body: formData });
 		const data = await readApiData(response);
 		setActivePatient(data.patient);
 		renderDocumentExtraction(data.document, data.patient);
+		summaryPanel.hidden = false;
 		scanPreviewContainer.classList.add('hidden');
 		uploadContainer.classList.add('hidden');
 		capturedDocumentFile = null;
@@ -882,6 +1055,49 @@ async function submitDocument(file) {
 
 submitDocumentButton.addEventListener('click', () => submitDocument(documentFileInput.files[0]));
 submitCameraDocumentButton.addEventListener('click', () => submitDocument(capturedDocumentFile));
+
+generateSummaryButton.addEventListener('click', async () => {
+	if (!currentPatientId) {
+		summaryStatus.textContent = 'Scan a document before generating a summary.';
+		summaryStatus.hidden = false;
+		return;
+	}
+
+	const token = localStorage.getItem('drsahayakToken');
+	generateSummaryButton.disabled = true;
+	generateSummaryButton.textContent = 'Generating Summary…';
+	summaryStatus.textContent = 'Generating a brief summary…';
+	summaryStatus.classList.remove('error', 'success');
+	summaryStatus.hidden = false;
+	summaryResult.hidden = true;
+	try {
+		const response = await fetch(`/api/dashboard/${encodeURIComponent(currentPatientId)}/summary`, {
+			method: 'POST',
+			headers: token ? { Authorization: `Bearer ${token}` } : {},
+		});
+		const data = await readApiData(response);
+		const summary = data.patient?.summary?.text;
+		if (!summary) {
+			throw new Error('The summary service returned no text.');
+		}
+		if (data.degraded || data.mock) {
+			summaryStatus.textContent = summary;
+			summaryStatus.classList.add('error');
+			return;
+		}
+		summaryResult.textContent = summary;
+		summaryResult.hidden = false;
+		summaryStatus.textContent = 'Summary generated.';
+		summaryStatus.classList.add('success');
+	} catch (error) {
+		summaryStatus.textContent = error.message || 'Could not generate the summary.';
+		summaryStatus.classList.add('error');
+		summaryStatus.hidden = false;
+	} finally {
+		generateSummaryButton.disabled = false;
+		generateSummaryButton.textContent = 'Generate Summary';
+	}
+});
 
 window.addEventListener('beforeunload', () => {
 	stopRecording();

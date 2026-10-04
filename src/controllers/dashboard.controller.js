@@ -45,7 +45,11 @@ async function generateSummary(req, res, next) {
 			status: 'summary_ready',
 		}));
 
-		return ok(res, { patient: updatedPatient, mock: summaryResult.mock });
+		return ok(res, {
+			patient: updatedPatient,
+			mock: summaryResult.mock,
+			degraded: Boolean(summaryResult.degraded),
+		});
 	} catch (error) {
 		return next(error);
 	}
