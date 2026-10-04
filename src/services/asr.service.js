@@ -2,18 +2,29 @@ const fs = require('fs');
 const path = require('path');
 const config = require('../config');
 
-function fetchWithTimeout(url, options, timeoutMs = 12000) {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-	return fetch(url, { ...options, signal: controller.signal })
-		.catch((error) => {
+async function fetchWithTimeout(url, options, timeoutMs = 12000) {
+	for (let attempt = 0; attempt < 2; attempt += 1) {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), timeoutMs);
+		try {
+			const response = await fetch(url, { ...options, signal: controller.signal });
+			if (attempt === 0 && (response.status === 429 || response.status === 503)) {
+				try {
+					await response.body?.cancel();
+				} catch {}
+				await new Promise((resolve) => setTimeout(resolve, 400));
+				continue;
+			}
+			return response;
+		} catch (error) {
 			if (error.name === 'AbortError') {
 				throw new Error('AI service took too long to respond');
 			}
 			throw error;
-		})
-		.finally(() => clearTimeout(timeout));
+		} finally {
+			clearTimeout(timeout);
+		}
+	}
 }
 
 const mockTranscripts = {
@@ -48,7 +59,7 @@ async function transcribeAudio(filePath, language) {
 		const base64Audio = (await fs.promises.readFile(filePath)).toString('base64');
 		const extension = path.extname(filePath).toLowerCase();
 		const mimeType = mimeTypesByExtension[extension] || 'audio/webm';
-		const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${config.geminiApiKey}`;
+		const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${config.geminiApiKey}`;
 		const response = await fetchWithTimeout(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },

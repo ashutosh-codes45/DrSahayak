@@ -16,14 +16,15 @@ async function scan(req, res, next) {
 			patient = store.createPatient({ name: patientName });
 		}
 
-		const docRecord = {
-			id: crypto.randomUUID(),
-			fileName: req.file.originalname,
-			documentType: extraction.documentType || 'unknown',
-			extractedText: extraction.extractedText || '',
-			extractedFields: extraction.fields || {},
-			createdAt: new Date().toISOString(),
-		};
+        const docRecord = {
+              id: crypto.randomUUID(),
+              fileName: req.file.originalname,
+              documentType: extraction.documentType || 'unknown',
+              extractedText: extraction.extractedText || '',
+              extractedFields: extraction.fields || {},
+              createdAt: new Date().toISOString(),
+              ...(extraction.degraded ? { degraded: true, degradedReason: extraction.degradedReason } : {}),
+};
 		const updatedPatient = store.updatePatient(patient.id, (existingPatient) => ({
 			...existingPatient,
 			documents: [...existingPatient.documents, docRecord],

@@ -1,0 +1,805 @@
+[
+  {
+    "id": "3b2dfcd1-f1fe-484f-8847-2dd4c2641fb4",
+    "name": "",
+    "language": "en",
+    "createdAt": "2026-10-04T10:27:45.079Z",
+    "voiceIntake": {
+      "transcript": "[Transcription unavailable — AI service error]",
+      "structuredHistory": {
+        "chiefComplaint": "[Transcription unavailable — AI service error]",
+        "symptoms": [],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "extraction-failed"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T10:27:45.089Z"
+    },
+    "documents": [],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "efd94a2e-3051-4332-9057-64671ed7c48e",
+    "name": "ashu",
+    "language": "en",
+    "createdAt": "2026-10-04T10:36:04.538Z",
+    "voiceIntake": {
+      "transcript": "Uh I am experiencing runny nose since yesterday morning and from today morning I am experiencing bad headache",
+      "structuredHistory": {
+        "chiefComplaint": "Uh I am experiencing runny nose since yesterday morning and from today morning I am experiencing bad",
+        "symptoms": [],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "extraction-failed"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T10:36:04.546Z"
+    },
+    "documents": [],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "52a81dd1-7a08-416f-9149-8d301e96a17b",
+    "name": "",
+    "language": "en",
+    "createdAt": "2026-10-04T10:44:45.077Z",
+    "voiceIntake": {
+      "transcript": "experiencing running nose uh from morning and also experiencing bad headache",
+      "structuredHistory": {
+        "chiefComplaint": "running nose and bad headache",
+        "symptoms": [
+          "running nose",
+          "bad headache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T10:44:45.085Z"
+    },
+    "documents": [
+      {
+        "id": "0ce10598-c520-41a0-ac76-d6cb72772db6",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "unknown",
+        "extractedText": "[Extraction unavailable — AI service error]",
+        "extractedFields": {
+          "medications": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T10:48:41.091Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "b0dff09a-40c6-4417-ab72-1bfefbf3d949",
+    "name": "",
+    "language": "unknown",
+    "createdAt": "2026-10-04T15:23:31.392Z",
+    "voiceIntake": null,
+    "documents": [
+      {
+        "id": "6b4b9e64-c923-4b04-809e-027321de4425",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "unknown",
+        "extractedText": "[Extraction unavailable — AI service error]",
+        "extractedFields": {
+          "medications": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T15:23:31.400Z"
+      }
+    ],
+    "summary": null,
+    "urgency": null,
+    "status": "new"
+  },
+  {
+    "id": "c000112c-9751-424b-80be-2385e8ac82b2",
+    "name": "Ashu",
+    "language": "unknown",
+    "createdAt": "2026-10-04T15:28:47.564Z",
+    "voiceIntake": null,
+    "documents": [
+      {
+        "id": "30deb841-a591-444e-8449-ef07420cb6c1",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "unknown",
+        "extractedText": "[Extraction unavailable — AI service error]",
+        "extractedFields": {
+          "medications": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T15:28:47.568Z"
+      }
+    ],
+    "summary": null,
+    "urgency": null,
+    "status": "new"
+  },
+  {
+    "id": "854f7984-80ce-4cf2-a042-2f4761d5134e",
+    "name": "",
+    "language": "unknown",
+    "createdAt": "2026-10-04T15:46:16.863Z",
+    "voiceIntake": null,
+    "documents": [
+      {
+        "id": "8419c1da-1f1d-4161-9550-81166e2466de",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "unknown",
+        "extractedText": "[Extraction unavailable — AI service error]",
+        "extractedFields": {
+          "medications": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T15:46:16.869Z",
+        "degraded": true,
+        "degradedReason": "AI service took too long to respond"
+      }
+    ],
+    "summary": null,
+    "urgency": null,
+    "status": "new"
+  },
+  {
+    "id": "4809a760-dda4-41ab-913a-685520581ec3",
+    "name": "",
+    "language": "unknown",
+    "createdAt": "2026-10-04T15:50:44.196Z",
+    "voiceIntake": null,
+    "documents": [
+      {
+        "id": "d4abcd54-de2d-4bb1-8226-501350f3318f",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "unknown",
+        "extractedText": "[Extraction unavailable — AI service error]",
+        "extractedFields": {
+          "medications": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T15:50:44.236Z",
+        "degraded": true,
+        "degradedReason": "Gemini API request failed (404): {\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).\",\n    \"status\": \"NOT_FOUND\"\n  }\n}\n"
+      }
+    ],
+    "summary": null,
+    "urgency": null,
+    "status": "new"
+  },
+  {
+    "id": "471e294f-e179-4a88-bd5d-9a8407f33e7f",
+    "name": "",
+    "language": "unknown",
+    "createdAt": "2026-10-04T15:52:56.667Z",
+    "voiceIntake": {
+      "transcript": "I'm feeling a fever with headache.",
+      "structuredHistory": {
+        "chiefComplaint": "Fever with headache",
+        "symptoms": [
+          "fever",
+          "headache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T15:55:16.243Z"
+    },
+    "documents": [
+      {
+        "id": "8d9d4618-a204-480e-b613-a6b4b3da1af5",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "prescription",
+        "extractedText": "Ashutosh Alok Kumar Chouhan 20y\nDr. D. D. Verma M.B.B.S.(Cal), F.A.G.P.(Ind.) Medical Officer Hukumchand Jute Mill P.O. Hazinagar, North 24 Parganas\nC/O fever for 2 days, vertigo\nBP 120/80\nP - 74/min\nAdvosyme 2 tsp tds\nTab. Pacimol CVS-P / LH\nTab. Addizol D R/O\nDate: 8 JUN 2026",
+        "extractedFields": {
+          "medications": [
+            {
+              "name": "Advosyme",
+              "dosage": "2 tsp",
+              "frequency": "tds",
+              "duration": "",
+              "confidence": "medium"
+            },
+            {
+              "name": "Pacimol CVS-P",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            },
+            {
+              "name": "Addizol D",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            }
+          ],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T15:52:56.686Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 5,
+      "level": "medium",
+      "reasons": [
+        "Mentions 'fever'"
+      ]
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "a1fe1250-762b-42d6-9be3-07b45c9657f2",
+    "name": "test patient 10",
+    "language": "en",
+    "createdAt": "2026-10-04T17:21:23.759Z",
+    "voiceIntake": {
+      "transcript": "I am feeling bad headache and fever, stomach ache is also a one problem.",
+      "structuredHistory": {
+        "chiefComplaint": "bad headache and fever",
+        "symptoms": [
+          "headache",
+          "fever",
+          "stomach ache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T17:21:23.765Z"
+    },
+    "documents": [
+      {
+        "id": "9af8943f-7bcb-4378-b43f-03e08a1a5a2d",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "prescription",
+        "extractedText": "Ashutosh Alok kumar chouhan 20y\nDr. D. D. Verma\nM.B.B.S.(Cal), F.A.G.P.(Ind.)\nMedical Officer\nHukumchand Jute Mill\nP.O. Hazinagar, North 24 Parganas\nMobile : 98303-87543\nC/O fever for 2 day, vertigo\nBP 120/80 P - 74m\nAdvosyme 2 sos m., tab. Pacimol CVS-B, Tab Addizid DFW\nDate: 8 JUN 2026",
+        "extractedFields": {
+          "medications": [
+            {
+              "name": "Advosyme",
+              "dosage": "",
+              "frequency": "2 sos m.",
+              "duration": "",
+              "confidence": "medium"
+            },
+            {
+              "name": "Pacimol CVS-B",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            },
+            {
+              "name": "Addizid DFW",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            }
+          ],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T17:22:55.873Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 5,
+      "level": "medium",
+      "reasons": [
+        "Mentions 'fever'"
+      ]
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "b745ee20-c673-4ef1-8abc-4f07e8630b61",
+    "name": "test patient 11",
+    "language": "hi",
+    "createdAt": "2026-10-04T17:31:33.043Z",
+    "voiceIntake": {
+      "transcript": "मुझे सुबह से अह सीने यानी छाती में दर्द हो रहा है।",
+      "structuredHistory": {
+        "chiefComplaint": "छाती में दर्द",
+        "symptoms": [
+          "सीने में दर्द",
+          "छाती में दर्द"
+        ],
+        "durationDays": 0,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "hi",
+      "createdAt": "2026-10-04T17:31:56.270Z"
+    },
+    "documents": [
+      {
+        "id": "55520f92-6f44-4d0b-b5d4-fe4171d10a9b",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "prescription",
+        "extractedText": "Ashutosh Alok kumar chauhan 20y\nDr. D. D. Verma M.B.B.S.(Cal), F.A.G.P.(Ind.) Medical Officer\nHukumchand Jute Mill\nP.O. Hazinagar, North 24 Parganas\nMobile : 98303-87543\nC/O fever for 2 days, vertigo\n9f\nBP 120/80\nP- 74min\nNEW SUNDER PHARMACY\nHukumchand Bazar\nTime - 10.30 a.m. to 11.30 a.m.\n06.30 p.m. to 09.00 p.m.\nMobile : 9339311947\nTHURSDAY CLOSED\nDate - 8 JUN 2026\n7.30 PM\nAdvosyme 2mt m.\nTab. Paricmol CVs-B\nCH\nTab. Addizb DT W\ndypr",
+        "extractedFields": {
+          "medications": [
+            {
+              "name": "Advosyme",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            },
+            {
+              "name": "Paricmol CVS-B",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            },
+            {
+              "name": "Addizb DT",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            }
+          ],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T17:33:07.405Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "696d1513-2784-4afd-8dfd-1e16e60d3163",
+    "name": "test patient 11",
+    "language": "en",
+    "createdAt": "2026-10-04T17:43:13.058Z",
+    "voiceIntake": {
+      "transcript": "Feeling a chest pain.",
+      "structuredHistory": {
+        "chiefComplaint": "Chest pain",
+        "symptoms": [
+          "chest pain"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T17:43:13.061Z"
+    },
+    "documents": [
+      {
+        "id": "b29d977a-ee26-4342-8bff-2456422067e0",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "prescription",
+        "extractedText": "Patient presents with fever and vertigo, prescribed symptomatic treatment including Paracetamol and B-complex supplements.",
+        "extractedFields": {
+          "doctorName": "Dr. D. D. Verma",
+          "patientName": "Ashutosh Alok Kumar Chouhan",
+          "patientAge": "20y",
+          "weight": "",
+          "address": "",
+          "importantDetails": [
+            "c/o fever for 2 days",
+            "vertigo",
+            "BP 120/80",
+            "Pulse 74 bpm"
+          ],
+          "medications": [
+            {
+              "name": "Advosyme",
+              "dosage": "2 tsp",
+              "frequency": "",
+              "duration": "",
+              "confidence": "medium"
+            },
+            {
+              "name": "Pacimol CVS-B",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "medium"
+            },
+            {
+              "name": "Addizol D-SR",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            }
+          ],
+          "labResults": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T17:43:30.707Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 30,
+      "level": "critical",
+      "reasons": [
+        "Mentions 'chest pain'"
+      ]
+    },
+    "status": "intake_complete"
+  },
+  {
+    "id": "4b2169b7-a272-404d-bc2a-8f3a4818aebb",
+    "name": "test patient 12",
+    "language": "en",
+    "createdAt": "2026-10-04T17:52:24.252Z",
+    "voiceIntake": {
+      "transcript": "vertigo stomach ache",
+      "structuredHistory": {
+        "chiefComplaint": "vertigo stomach ache",
+        "symptoms": [
+          "vertigo",
+          "stomach ache"
+        ],
+        "durationDays": null,
+        "pastHistory": [],
+        "medicationsMentioned": [],
+        "allergies": [],
+        "confidence": "model-generated"
+      },
+      "language": "en",
+      "createdAt": "2026-10-04T18:12:02.460Z"
+    },
+    "documents": [
+      {
+        "id": "d8d18b12-e567-48cf-b9e8-b8cddf43c57d",
+        "fileName": "IMG_20260608_205623.jpg",
+        "documentType": "prescription",
+        "extractedText": "Patient presents with fever for 2 days and vertigo, prescribed symptomatic medications.",
+        "extractedFields": {
+          "doctorName": "Dr. D. D. Verma",
+          "patientName": "Ashutosh Alok Kumar Chouhan",
+          "patientAge": "20y",
+          "weight": "",
+          "address": "Hukumchand Jute Mill, P.O. Hazinagar, North 24 Parganas",
+          "importantDetails": [
+            "C/o fever fr 2 days",
+            "vertigo",
+            "BP 120/80",
+            "P 74 bpm"
+          ],
+          "medications": [
+            {
+              "name": "Advosyme",
+              "dosage": "2 tsp",
+              "frequency": "",
+              "duration": "",
+              "confidence": "medium"
+            },
+            {
+              "name": "Pacimol CVS-B",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            },
+            {
+              "name": "Addizol DRW",
+              "dosage": "",
+              "frequency": "",
+              "duration": "",
+              "confidence": "low"
+            }
+          ],
+          "labResults": [],
+          "advice": ""
+        },
+        "createdAt": "2026-10-04T17:53:00.653Z"
+      },
+      {
+        "id": "adea102c-6449-4dec-9bf5-499b3b0654d7",
+        "fileName": "ChatGPT Image Oct 4, 2026, 11_22_52 PM.png",
+        "documentType": "prescription",
+        "extractedText": "Prescription for Rahul Verma for fever, cough, and cold follow-up.",
+        "extractedFields": {
+          "doctorName": "Dr. Priya Sharma",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 years",
+          "weight": "72 kg",
+          "address": "123 Wellness Drive, Green Park, New Delhi – 110016",
+          "importantDetails": [
+            "Fever, cough, cold (follow-up)"
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Thrice daily (after meals)",
+              "duration": "3 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin 500 mg Capsule",
+              "dosage": "1 capsule",
+              "frequency": "Twice daily (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine 10 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C 500 mg Tablet",
+              "dosage": "1 tablet",
+              "frequency": "Once daily (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [],
+          "advice": "Drink plenty of fluids and get adequate rest. If symptoms worsen or persist beyond 5 days, please revisit the clinic. Avoid self-medication and do not stop antibiotics prematurely."
+        },
+        "createdAt": "2026-10-04T17:53:51.463Z"
+      },
+      {
+        "id": "0ca30cf9-9a70-4ed6-902f-c7e373996e5e",
+        "fileName": "Lab Report and Handwritten Prescription.png",
+        "documentType": "prescription",
+        "extractedText": "Prescription from Dr. S. Mehta for Rahul Verma including Paracetamol, Amoxicillin, Cetirizine, and Vitamin C.",
+        "extractedFields": {
+          "doctorName": "Dr. S. Mehta",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 / M",
+          "weight": "72 kg",
+          "address": "45, Sector 17, New Delhi - 110017",
+          "importantDetails": [],
+          "medications": [
+            {
+              "name": "Paracetamol",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine",
+              "dosage": "10 mg",
+              "frequency": "OD (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C",
+              "dosage": "500 mg",
+              "frequency": "OD (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [],
+          "advice": "Keep yourself well hydrated. Avoid oily/spicy food. If symptoms persist or worsen, consult again. Do not self medicate."
+        },
+        "createdAt": "2026-10-04T17:57:02.827Z"
+      },
+      {
+        "id": "b893394e-5c0f-400f-b0d3-a936b329c82f",
+        "fileName": "Lab Report and Handwritten Prescription.png",
+        "documentType": "prescription",
+        "extractedText": "Prescription from Dr. S. Mehta for Rahul Verma including Paracetamol, Amoxicillin, Cetirizine, and Vitamin C.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. S. Mehta",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 / M",
+          "weight": "72 kg",
+          "address": "Sunrise Health Clinic, 45, Sector 17, New Delhi - 110017",
+          "importantDetails": [],
+          "medications": [
+            {
+              "name": "Paracetamol",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine",
+              "dosage": "10 mg",
+              "frequency": "OD (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C",
+              "dosage": "500 mg",
+              "frequency": "OD (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [],
+          "advice": "Keep yourself well hydrated. Avoid oily/spicy food. If symptoms persist or worsen, consult again. Do not self medicate."
+        },
+        "createdAt": "2026-10-04T18:04:53.813Z"
+      },
+      {
+        "id": "fb2ef812-e677-4f47-92a0-c9ebcecb4faa",
+        "fileName": "Lab Report and Handwritten Prescription.png",
+        "documentType": "mixed",
+        "extractedText": "Lab report shows slightly low hemoglobin, with prescription for paracetamol, amoxicillin, cetirizine, and vitamin C.",
+        "extractedFields": {
+          "readability": "clear",
+          "readabilityNote": "",
+          "doctorName": "Dr. S. Mehta",
+          "patientName": "Rahul Verma",
+          "patientAge": "28 / Male",
+          "weight": "72 kg",
+          "address": "Sunrise Health Clinic, 45, Sector 17, New Delhi - 110017",
+          "importantDetails": [
+            "Hemoglobin is slightly below the reference range."
+          ],
+          "medications": [
+            {
+              "name": "Paracetamol",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Amoxicillin",
+              "dosage": "500 mg",
+              "frequency": "TID (after meals)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Cetirizine",
+              "dosage": "10 mg",
+              "frequency": "OD (at night)",
+              "duration": "5 days",
+              "confidence": "high"
+            },
+            {
+              "name": "Vitamin C",
+              "dosage": "500 mg",
+              "frequency": "OD (after breakfast)",
+              "duration": "7 days",
+              "confidence": "high"
+            }
+          ],
+          "labResults": [
+            {
+              "testName": "Hemoglobin (Hb)",
+              "result": "13.2",
+              "unit": "g/dL",
+              "referenceRange": "13.5 - 17.5",
+              "flag": "low",
+              "confidence": "high"
+            },
+            {
+              "testName": "Total Leucocyte Count (TLC)",
+              "result": "8,200",
+              "unit": "/µL",
+              "referenceRange": "4,000 - 11,000",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Platelet Count",
+              "result": "2.4",
+              "unit": "lakh/µL",
+              "referenceRange": "1.5 - 4.5",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Fasting Blood Sugar (FBS)",
+              "result": "96",
+              "unit": "mg/dL",
+              "referenceRange": "70 - 110",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "Serum Creatinine",
+              "result": "0.9",
+              "unit": "mg/dL",
+              "referenceRange": "0.7 - 1.3",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGPT (ALT)",
+              "result": "32",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            },
+            {
+              "testName": "SGOT (AST)",
+              "result": "28",
+              "unit": "U/L",
+              "referenceRange": "0 - 40",
+              "flag": "normal",
+              "confidence": "high"
+            }
+          ],
+          "advice": "Keep yourself well hydrated. Avoid oily/spicy food. If symptoms persist or worsen, consult again. Do not self medicate."
+        },
+        "createdAt": "2026-10-04T18:08:23.877Z"
+      }
+    ],
+    "summary": null,
+    "urgency": {
+      "score": 0,
+      "level": "low",
+      "reasons": []
+    },
+    "status": "intake_complete"
+  }
+]

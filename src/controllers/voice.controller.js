@@ -11,8 +11,10 @@ async function intake(req, res, next) {
 		}
 
 		const { patientId, language, patientName } = req.body;
-		const { transcript, mock } = await asr.transcribeAudio(req.file.path, language);
+		const { transcript, mock, degraded: transcriptionDegraded } = await asr.transcribeAudio(req.file.path, language);
 		const structuredHistory = await llm.extractStructuredHistory(transcript, language);
+		const historyDegraded = structuredHistory.confidence === 'extraction-failed';
+		const degraded = transcriptionDegraded || historyDegraded;
 		const urgency = triage.computeUrgency(structuredHistory);
 
 		let patient = patientId ? store.getPatient(patientId) : null;
@@ -32,7 +34,13 @@ async function intake(req, res, next) {
 			status: 'intake_complete',
 		}));
 
-		return ok(res, { patient: updatedPatient, mock });
+		return ok(res, {
+			patient: updatedPatient,
+			mock,
+			degraded,
+			transcriptionDegraded: Boolean(transcriptionDegraded),
+			historyDegraded,
+		});
 	} catch (error) {
 		return next(error);
 	}
