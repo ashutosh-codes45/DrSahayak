@@ -36,6 +36,15 @@ const mockTranscripts = {
 	ta: 'எனக்கு நேற்று முதல் காய்ச்சலும் தலைவலியும் உள்ளது.',
 };
 
+const languageNames = {
+	en: 'English',
+	hi: 'Hindi',
+	bn: 'Bengali',
+	te: 'Telugu',
+	mr: 'Marathi',
+	ta: 'Tamil',
+};
+
 const mimeTypesByExtension = {
 	'.mp3': 'audio/mpeg',
 	'.mpeg': 'audio/mpeg',
@@ -68,7 +77,7 @@ async function transcribeAudio(filePath, language) {
 					parts: [
 						{ inline_data: { mime_type: mimeType, data: base64Audio } },
 						{
-							text: `Transcribe this audio exactly as spoken. The speaker is using one of: English, Hindi, Bengali, Telugu, Marathi, or Tamil (hint: ${language || 'unspecified'}), possibly code-switching between languages. Return ONLY the transcript text in its original script, no commentary, no markdown.`,
+							text: `Transcribe this audio exactly as spoken. The selected spoken language is ${languageNames[language] || 'not specified'}; the speaker may code-switch. Return ONLY the transcript in its original language and script, with no translation, commentary, or markdown.`,
 						},
 					],
 				}],

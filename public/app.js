@@ -11,13 +11,23 @@ const authMessage = document.getElementById('auth-message');
 const mainTabs = document.getElementById('main-tabs');
 const userPill = document.getElementById('user-pill');
 const logoutButton = document.getElementById('logout-btn');
+const queueListPane = document.getElementById('queue-list-pane');
 const queueList = document.getElementById('queue-list');
+const patientHistorySearch = document.getElementById('patient-history-search');
+const patientHistoryId = document.getElementById('patient-history-id');
+const patientHistoryStatus = document.getElementById('patient-history-status');
 const refreshQueueButton = document.getElementById('refresh-queue');
+const deleteAllPatientsButton = document.getElementById('delete-all-patients');
 const detailEmpty = document.getElementById('detail-empty');
+const detailPane = document.getElementById('detail-pane');
 const detailContent = document.getElementById('detail-content');
+const documentImageDialog = document.getElementById('document-image-dialog');
+const documentImageDialogImage = document.getElementById('document-image-dialog-image');
+const closeDocumentImageButton = document.getElementById('close-document-image');
 
 let authMode = 'login';
 let isInitializing = true;
+let currentUserRole = null;
 let currentPatientId = null;
 let selectedPatientId = null;
 let audioStream = null;
@@ -86,6 +96,9 @@ function setAuthMode(mode) {
 }
 
 function showView(viewName) {
+	if (currentUserRole === 'patient' && viewName !== 'dashboard') {
+		return;
+	}
 	document.querySelectorAll('.view').forEach((view) => {
 		const active = view.id === `view-${viewName}`;
 		view.classList.toggle('active', active);
@@ -94,14 +107,27 @@ function showView(viewName) {
 	document.querySelectorAll('.tab-btn').forEach((button) => {
 		button.classList.toggle('active', button.dataset.view === viewName);
 	});
-	if (viewName === 'dashboard' && !isInitializing) {
+	if (viewName === 'dashboard' && currentUserRole === 'doctor' && !isInitializing) {
 		loadQueue();
 	}
 }
 
 function showAuthenticatedUser(user) {
+	currentUserRole = user.role;
+	const isPatient = user.role === 'patient';
 	authScreen.classList.remove('active');
-	mainTabs.classList.remove('hidden');
+	mainTabs.classList.toggle('hidden', isPatient);
+	queueListPane.classList.toggle('hidden', isPatient);
+	patientHistorySearch.classList.toggle('hidden', !isPatient);
+	detailPane.classList.toggle('hidden', isPatient);
+	patientHistoryId.value = '';
+	patientHistoryStatus.textContent = '';
+	detailContent.replaceChildren();
+	detailContent.hidden = true;
+	detailEmpty.textContent = isPatient
+		? 'Search using your unique patient ID to view your history.'
+		: 'Select a patient from the queue to review their case.';
+	detailEmpty.hidden = false;
 	const accountName = user.name || user.email || 'Signed in';
 	userPill.textContent = user.role === 'doctor' && !/^dr\.?\s/i.test(accountName)
 		? `Dr. ${accountName}`
@@ -114,9 +140,13 @@ function showAuthenticatedUser(user) {
 function showLoginScreen() {
 	stopRecording();
 	stopCamera();
+	currentUserRole = null;
 	currentPatientId = null;
 	localStorage.removeItem('drsahayakToken');
 	mainTabs.classList.add('hidden');
+	queueListPane.classList.remove('hidden');
+	patientHistorySearch.classList.add('hidden');
+	detailPane.classList.remove('hidden');
 	userPill.classList.add('hidden');
 	logoutButton.classList.add('hidden');
 	document.querySelectorAll('.view').forEach((view) => {
@@ -312,21 +342,24 @@ function renderVoiceIntakeResult(data) {
 	const intake = data.patient.voiceIntake;
 	voiceResult.replaceChildren();
 	voiceResult.hidden = false;
-	voiceResult.classList.toggle('error', Boolean(data.transcriptionDegraded || data.historyDegraded));
+	voiceResult.classList.toggle('error', Boolean(data.transcriptionDegraded || data.translationDegraded || data.historyDegraded));
 
-	if (data.transcriptionDegraded || data.historyDegraded) {
+	if (data.transcriptionDegraded || data.translationDegraded || data.historyDegraded) {
 		const warning = document.createElement('p');
 		warning.className = 'intake-edit-warning';
 		warning.textContent = data.transcriptionDegraded
 			? 'Transcription may be incomplete. Review and edit it before using it clinically.'
-			: 'Chief complaint extraction is unavailable. Review the transcript and enter the complaint manually.';
+			: data.translationDegraded
+				? 'English translation is unavailable. Review the original transcript; extraction used the available source text.'
+				: 'Chief complaint extraction is unavailable. Review the transcript and enter the complaint manually.';
 		voiceResult.append(warning);
 	}
 
 	const label = document.createElement('label');
 	label.className = 'intake-edit-field';
 	const labelText = document.createElement('span');
-	labelText.textContent = data.mock ? 'Demo transcript' : 'Transcript';
+	const spokenLanguageNames = { en: 'English', hi: 'Hindi', bn: 'Bengali', te: 'Telugu', mr: 'Marathi', ta: 'Tamil' };
+	labelText.textContent = `${data.mock ? 'Demo transcript' : 'Original transcript'} (${spokenLanguageNames[intake.language] || 'spoken language'})`;
 	const transcriptInput = document.createElement('textarea');
 	transcriptInput.className = 'intake-edit-input voice-transcript-input';
 	transcriptInput.rows = 4;
@@ -335,17 +368,64 @@ function renderVoiceIntakeResult(data) {
 	label.append(labelText, transcriptInput);
 	voiceResult.append(label);
 
-	if (!data.historyDegraded && !data.transcriptionDegraded) {
+	const translationLabel = document.createElement('label');
+	translationLabel.className = 'intake-edit-field';
+	const translationLabelText = document.createElement('span');
+	translationLabelText.textContent = 'English translation';
+	const translationInput = document.createElement('textarea');
+	translationInput.className = 'intake-edit-input';
+	translationInput.rows = 4;
+	translationInput.readOnly = true;
+	translationInput.value = intake.englishTranslation || (data.translationDegraded ? 'Translation unavailable.' : '');
+	translationInput.setAttribute('aria-label', 'English translation');
+	translationLabel.append(translationLabelText, translationInput);
+	voiceResult.append(translationLabel);
+
+	if (!data.historyDegraded && !data.transcriptionDegraded && !data.translationDegraded) {
 		const complaint = document.createElement('p');
 		complaint.className = 'voice-intake-complaint';
 		complaint.textContent = `Chief Complaint: ${intake.structuredHistory?.chiefComplaint?.trim() || 'Not specified'}`;
 		voiceResult.append(complaint);
 	}
 
+	const triageResult = data.patient.urgency || { score: 0, level: 'low', reasons: [] };
+	const urgencyLevel = ['critical', 'high', 'medium', 'low'].includes(triageResult.level?.toLowerCase())
+		? triageResult.level.toLowerCase()
+		: 'low';
+	const triagePanel = document.createElement('section');
+	triagePanel.className = `voice-intake-triage ${urgencyLevel}`;
+	if (urgencyLevel === 'critical') {
+		triagePanel.setAttribute('role', 'alert');
+		const emergencyNotice = document.createElement('p');
+		emergencyNotice.className = 'voice-intake-emergency';
+		emergencyNotice.textContent = 'This case includes emergency symptoms and requires urgent/emergency medical attention.';
+		triagePanel.append(emergencyNotice);
+	}
 	const urgency = document.createElement('p');
 	urgency.className = 'voice-intake-urgency';
-	urgency.textContent = `Urgency: ${data.patient.urgency?.level || 'low'}`;
-	voiceResult.append(urgency);
+	urgency.textContent = `Urgency: ${urgencyLevel.toUpperCase()}`;
+	const score = document.createElement('p');
+	score.className = 'voice-intake-score';
+	score.textContent = `Score: ${Number.isFinite(triageResult.score) ? triageResult.score : 0}`;
+	const reasonsHeading = document.createElement('p');
+	reasonsHeading.className = 'voice-intake-reasons-heading';
+	reasonsHeading.textContent = 'Reasons:';
+	const reasonsList = document.createElement('ul');
+	reasonsList.className = 'voice-intake-reasons';
+	const reasons = Array.isArray(triageResult.reasons) ? triageResult.reasons : [];
+	if (reasons.length) {
+		reasons.forEach((reason) => {
+			const item = document.createElement('li');
+			item.textContent = reason;
+			reasonsList.append(item);
+		});
+	} else {
+		const item = document.createElement('li');
+		item.textContent = 'No matched symptoms recorded.';
+		reasonsList.append(item);
+	}
+	triagePanel.append(urgency, score, reasonsHeading, reasonsList);
+	voiceResult.append(triagePanel);
 
 	const actions = document.createElement('div');
 	actions.className = 'intake-edit-actions';
@@ -388,20 +468,69 @@ function renderPatientDetails(patient) {
 	const heading = document.createElement('h2');
 	heading.textContent = patient.name || 'Unnamed patient';
 	header.append(heading);
+	const actions = document.createElement('div');
+	actions.className = 'patient-detail-actions';
 	const urgencyLevel = patient.urgency?.level?.toLowerCase();
 	if (urgencyLevel) {
 		const urgencyBadge = document.createElement('span');
 		urgencyBadge.className = `urgency-badge ${urgencyLevel}`;
 		const urgencyScore = patient.urgency.score;
 		urgencyBadge.textContent = `${urgencyLevel[0].toUpperCase()}${urgencyLevel.slice(1)}${urgencyScore == null ? '' : ` · ${urgencyScore}`}`;
-		header.append(urgencyBadge);
+		actions.append(urgencyBadge);
 	}
+	if (currentUserRole === 'doctor') {
+		const deleteButton = document.createElement('button');
+		deleteButton.className = 'delete-patient-button';
+		deleteButton.type = 'button';
+		deleteButton.dataset.patientId = patient.id;
+		deleteButton.dataset.patientName = patient.name || 'Unnamed patient';
+		deleteButton.textContent = '\u{1F5D1}\uFE0E';
+		deleteButton.setAttribute('aria-label', `Delete ${deleteButton.dataset.patientName}'s history`);
+		deleteButton.title = `Delete ${deleteButton.dataset.patientName}'s history`;
+		actions.append(deleteButton);
+	}
+	header.append(actions);
 	detailContent.append(header);
 
 	const overview = createDetailSection('Patient');
+	appendDetailField(overview, 'Patient ID', patient.id);
 	appendDetailField(overview, 'Language', patient.language);
 	appendDetailField(overview, 'Status', patient.status);
 	detailContent.append(overview);
+
+	if (patient.urgency) {
+		const triageSection = createDetailSection('Triage');
+		const urgencyLevel = patient.urgency.level || 'low';
+		appendDetailField(triageSection, 'Urgency', urgencyLevel.toUpperCase());
+		appendDetailField(triageSection, 'Score', patient.urgency.score);
+		if (urgencyLevel.toLowerCase() === 'critical') {
+			const emergencyNotice = document.createElement('p');
+			emergencyNotice.className = 'triage-emergency-notice';
+			emergencyNotice.textContent = 'This case includes emergency symptoms and requires urgent/emergency medical attention.';
+			triageSection.append(emergencyNotice);
+		}
+		const reasonsHeading = document.createElement('p');
+		const reasonsLabel = document.createElement('strong');
+		reasonsLabel.textContent = 'Reasons: ';
+		reasonsHeading.append(reasonsLabel);
+		triageSection.append(reasonsHeading);
+		const reasonsList = document.createElement('ul');
+		reasonsList.className = 'triage-reasons';
+		const reasons = Array.isArray(patient.urgency.reasons) ? patient.urgency.reasons : [];
+		if (reasons.length) {
+			reasons.forEach((reason) => {
+				const item = document.createElement('li');
+				item.textContent = reason;
+				reasonsList.append(item);
+			});
+		} else {
+			const item = document.createElement('li');
+			item.textContent = 'No matched symptoms recorded.';
+			reasonsList.append(item);
+		}
+		triageSection.append(reasonsList);
+		detailContent.append(triageSection);
+	}
 
 	const history = patient.voiceIntake?.structuredHistory;
 	const historySection = createDetailSection('Structured history');
@@ -412,25 +541,82 @@ function renderPatientDetails(patient) {
 	appendDetailField(historySection, 'Medications mentioned', history?.medicationsMentioned);
 	appendDetailField(historySection, 'Allergies', history?.allergies);
 	if (patient.voiceIntake?.transcript) {
+		const transcriptLabel = document.createElement('p');
+		const transcriptLabelText = document.createElement('strong');
+		transcriptLabelText.textContent = 'Original transcript';
+		transcriptLabel.append(transcriptLabelText);
+		historySection.append(transcriptLabel);
 		const transcript = document.createElement('div');
 		transcript.className = 'transcript-box';
 		transcript.textContent = patient.voiceIntake.transcript;
 		historySection.append(transcript);
+	}
+	if (patient.voiceIntake?.englishTranslation) {
+		const translationLabel = document.createElement('p');
+		const translationLabelText = document.createElement('strong');
+		translationLabelText.textContent = 'English translation';
+		translationLabel.append(translationLabelText);
+		historySection.append(translationLabel);
+		const translation = document.createElement('div');
+		translation.className = 'transcript-box';
+		translation.textContent = patient.voiceIntake.englishTranslation;
+		historySection.append(translation);
+	}
+	if (patient.voiceIntake?.fileUrl) {
+		const audio = document.createElement('audio');
+		audio.className = 'voice-source-audio';
+		audio.controls = true;
+		audio.preload = 'metadata';
+		audio.src = patient.voiceIntake.fileUrl;
+		audio.setAttribute('aria-label', `Original voice recording for ${patient.name || 'patient'}`);
+		historySection.append(audio);
 	}
 	detailContent.append(historySection);
 
 	const documentsSection = createDetailSection('Documents');
 	if (patient.documents?.length) {
 		patient.documents.forEach((documentRecord) => {
-			appendDetailField(documentsSection, documentRecord.documentType || 'Document', documentRecord.fileName);
-			appendDetailField(documentsSection, 'Extracted text', documentRecord.extractedText);
+			const documentRecordElement = document.createElement('article');
+			documentRecordElement.className = 'document-record';
+			const fields = document.createElement('div');
+			fields.className = 'document-record-fields';
+			appendDetailField(fields, documentRecord.documentType || 'Document', documentRecord.fileName);
+			appendDetailField(fields, 'Extracted text', documentRecord.extractedText);
 			const medications = documentRecord.extractedFields?.medications || [];
-			appendDetailField(documentsSection, 'Medications', medications.map((medication) =>
+			appendDetailField(fields, 'Medications', medications.map((medication) =>
 				[medication.name, medication.dosage, medication.frequency, medication.duration].filter(Boolean).join(' '),
 			));
 			if (documentRecord.extractedFields?.advice) {
-				appendDetailField(documentsSection, 'Advice', documentRecord.extractedFields.advice);
+				appendDetailField(fields, 'Advice', documentRecord.extractedFields.advice);
 			}
+			documentRecordElement.append(fields);
+
+			if (documentRecord.fileUrl && documentRecord.mimeType?.startsWith('image/')) {
+				documentRecordElement.classList.add('has-source');
+				const thumbnailButton = document.createElement('button');
+				thumbnailButton.className = 'document-thumbnail-button';
+				thumbnailButton.type = 'button';
+				thumbnailButton.dataset.fullSrc = documentRecord.fileUrl;
+				thumbnailButton.dataset.imageAlt = `Original ${documentRecord.fileName || 'uploaded document'}`;
+				thumbnailButton.setAttribute('aria-label', `Enlarge ${documentRecord.fileName || 'uploaded document'}`);
+				const thumbnail = document.createElement('img');
+				thumbnail.className = 'document-thumbnail';
+				thumbnail.src = documentRecord.fileUrl;
+				thumbnail.alt = documentRecord.fileName || 'Original uploaded document';
+				thumbnail.loading = 'lazy';
+				thumbnailButton.append(thumbnail);
+				documentRecordElement.append(thumbnailButton);
+			} else if (documentRecord.fileUrl) {
+				documentRecordElement.classList.add('has-source');
+				const originalLink = document.createElement('a');
+				originalLink.className = 'document-original-link';
+				originalLink.href = documentRecord.fileUrl;
+				originalLink.target = '_blank';
+				originalLink.rel = 'noopener noreferrer';
+				originalLink.textContent = 'Open original';
+				documentRecordElement.append(originalLink);
+			}
+			documentsSection.append(documentRecordElement);
 		});
 	} else {
 		appendDetailField(documentsSection, 'Documents', 'None uploaded');
@@ -448,8 +634,10 @@ function renderPatientDetails(patient) {
 
 async function selectPatient(patientId) {
 	selectedPatientId = patientId;
-	queueList.querySelectorAll('.queue-item').forEach((card) => {
-		card.classList.toggle('selected', card.dataset.patientId === patientId);
+	queueList.querySelectorAll('.queue-item').forEach((item) => {
+		const selected = item.dataset.patientId === patientId;
+		item.classList.toggle('selected', selected);
+		item.querySelector('.queue-patient-button')?.setAttribute('aria-pressed', String(selected));
 	});
 	detailEmpty.hidden = true;
 	detailContent.hidden = false;
@@ -470,23 +658,116 @@ async function selectPatient(patientId) {
 }
 
 queueList.addEventListener('click', (event) => {
-	const card = event.target.closest?.('.queue-item');
-	if (!card || !queueList.contains(card)) {
+	const selectButton = event.target.closest?.('.queue-patient-button');
+	if (!selectButton || !queueList.contains(selectButton)) {
 		return;
 	}
-	const patientId = card.dataset.patientId;
-	console.log('patient card clicked', patientId);
-	selectPatient(patientId);
+	selectPatient(selectButton.dataset.patientId);
 });
 
-queueList.addEventListener('keydown', (event) => {
-	if (event.key !== 'Enter' && event.key !== ' ') return;
-	const card = event.target.closest?.('.queue-item');
-	if (!card || !queueList.contains(card)) return;
+patientHistorySearch.addEventListener('submit', async (event) => {
 	event.preventDefault();
-	const patientId = card.dataset.patientId;
-	console.log('patient card clicked', patientId);
-	selectPatient(patientId);
+	const patientId = patientHistoryId.value.trim();
+	if (!patientId) {
+		patientHistoryStatus.textContent = 'Enter your unique patient ID to continue.';
+		return;
+	}
+
+	patientHistoryStatus.textContent = 'Searching...';
+	detailPane.classList.remove('hidden');
+	detailContent.replaceChildren();
+	detailContent.hidden = true;
+	detailEmpty.textContent = 'Loading patient history...';
+	detailEmpty.hidden = false;
+	try {
+		const token = localStorage.getItem('drsahayakToken');
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const response = await fetch(`/api/patients/${encodeURIComponent(patientId)}`, { headers });
+		const patient = await readApiData(response);
+		renderPatientDetails(patient);
+		patientHistoryStatus.textContent = '';
+	} catch (error) {
+		detailPane.classList.add('hidden');
+		detailContent.hidden = true;
+		detailEmpty.textContent = error.message || 'Could not find patient history.';
+		detailEmpty.hidden = false;
+		patientHistoryStatus.textContent = 'No history found for that ID.';
+	}
+});
+
+detailContent.addEventListener('click', (event) => {
+	const deleteButton = event.target.closest?.('.delete-patient-button');
+	if (deleteButton && detailContent.contains(deleteButton)) {
+		deletePatient(deleteButton.dataset.patientId, deleteButton.dataset.patientName);
+		return;
+	}
+	const thumbnailButton = event.target.closest?.('.document-thumbnail-button');
+	if (thumbnailButton && detailContent.contains(thumbnailButton)) {
+		documentImageDialogImage.src = thumbnailButton.dataset.fullSrc;
+		documentImageDialogImage.alt = thumbnailButton.dataset.imageAlt || 'Enlarged original document';
+		documentImageDialog.showModal();
+	}
+});
+
+closeDocumentImageButton.addEventListener('click', () => documentImageDialog.close());
+documentImageDialog.addEventListener('click', (event) => {
+	if (event.target === documentImageDialog) {
+		documentImageDialog.close();
+	}
+});
+
+function resetPatientDetail() {
+	selectedPatientId = null;
+	detailContent.replaceChildren();
+	detailContent.hidden = true;
+	detailEmpty.textContent = 'Select a patient from the queue to review their case.';
+	detailEmpty.hidden = false;
+}
+
+async function deletePatient(patientId, patientName) {
+	if (!window.confirm(`Delete ${patientName}'s history? This cannot be undone.`)) {
+		return;
+	}
+
+	try {
+		const token = localStorage.getItem('drsahayakToken');
+		const response = await fetch(`/api/patients/${encodeURIComponent(patientId)}`, {
+			method: 'DELETE',
+			headers: token ? { Authorization: `Bearer ${token}` } : {},
+		});
+		await readApiData(response);
+		if (selectedPatientId === patientId) {
+			resetPatientDetail();
+		}
+		if (currentPatientId === patientId) {
+			currentPatientId = null;
+			patientIdStatus.textContent = 'No active patient.';
+		}
+		await loadQueue();
+	} catch (error) {
+		window.alert(error.message || 'Could not delete the patient.');
+	}
+}
+
+deleteAllPatientsButton.addEventListener('click', async () => {
+	if (!window.confirm('Delete all patients from the queue? This cannot be undone.')) {
+		return;
+	}
+
+	try {
+		const token = localStorage.getItem('drsahayakToken');
+		const response = await fetch('/api/patients', {
+			method: 'DELETE',
+			headers: token ? { Authorization: `Bearer ${token}` } : {},
+		});
+		await readApiData(response);
+		resetPatientDetail();
+		currentPatientId = null;
+		patientIdStatus.textContent = 'No active patient.';
+		await loadQueue();
+	} catch (error) {
+		window.alert(error.message || 'Could not delete the patient queue.');
+	}
 });
 
 async function loadQueue() {
@@ -514,13 +795,13 @@ async function loadQueue() {
 			item.className = 'queue-item';
 			item.dataset.patientId = patient.id;
 			item.classList.toggle('selected', patient.id === selectedPatientId);
-			item.tabIndex = 0;
-			item.setAttribute('role', 'button');
-			item.setAttribute('aria-pressed', String(patient.id === selectedPatientId));
 			const header = document.createElement('div');
 			header.className = 'queue-item-header';
-			const name = document.createElement('div');
-			name.className = 'name';
+			const name = document.createElement('button');
+			name.className = 'name queue-patient-button';
+			name.type = 'button';
+			name.dataset.patientId = patient.id;
+			name.setAttribute('aria-pressed', String(patient.id === selectedPatientId));
 			name.textContent = patient.name || 'Unnamed patient';
 			header.append(name);
 			const urgencyLevel = patient.urgency?.level?.toLowerCase();
@@ -669,7 +950,9 @@ submitVoiceButton.addEventListener('click', async () => {
 	submitVoiceButton.textContent = 'Processing audio…';
 	setResult(voiceResult, '');
 	try {
-		const response = await fetch('/api/voice/intake', { method: 'POST', body: formData });
+		const token = localStorage.getItem('drsahayakToken');
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const response = await fetch('/api/voice/intake', { method: 'POST', headers, body: formData });
 		const data = await readApiData(response);
 		setActivePatient(data.patient);
 		renderVoiceIntakeResult(data);
@@ -1035,7 +1318,9 @@ async function submitDocument(file) {
 	summaryStatus.hidden = true;
 	summaryStatus.textContent = '';
 	try {
-		const response = await fetch('/api/ocr/scan', { method: 'POST', body: formData });
+		const token = localStorage.getItem('drsahayakToken');
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const response = await fetch('/api/ocr/scan', { method: 'POST', headers, body: formData });
 		const data = await readApiData(response);
 		setActivePatient(data.patient);
 		renderDocumentExtraction(data.document, data.patient);

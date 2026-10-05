@@ -19,6 +19,8 @@ async function scan(req, res, next) {
         const docRecord = {
               id: crypto.randomUUID(),
               fileName: req.file.originalname,
+			  fileUrl: `/uploads/${encodeURIComponent(req.file.filename)}`,
+			  mimeType: req.file.mimetype,
               documentType: extraction.documentType || 'unknown',
               extractedText: extraction.extractedText || '',
               extractedFields: extraction.fields || {},

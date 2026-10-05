@@ -65,18 +65,29 @@
 
       <!-- QUEUE / DASHBOARD VIEW -->
       <section id="view-dashboard" class="view hidden-view">
+        <form id="patient-history-search" class="patient-history-search hidden" novalidate>
+          <label class="field">
+            <span>Unique patient ID</span>
+            <input id="patient-history-id" type="text" placeholder="Search using Unique patient ID" autocomplete="off" required />
+          </label>
+          <button type="submit" class="btn-primary">Search history</button>
+          <p id="patient-history-status" class="patient-history-status" role="status" aria-live="polite"></p>
+        </form>
         <div class="queue-layout">
-          <aside class="queue-list-pane">
+          <aside id="queue-list-pane" class="queue-list-pane">
             <div class="pane-header">
               <h2>Patient queue</h2>
-              <button id="refresh-queue" class="btn-ghost" title="Refresh">&#8635;</button>
+              <div class="queue-actions">
+                <button id="delete-all-patients" class="btn-danger" type="button" title="Delete all patients" aria-label="Delete all patients">&#x1F5D1;&#xFE0E;</button>
+                <button id="refresh-queue" class="btn-ghost" type="button" title="Refresh" aria-label="Refresh queue">&#8635;</button>
+              </div>
             </div>
             <ul id="queue-list" class="queue-list">
               <li class="queue-empty">Loading&hellip;</li>
             </ul>
           </aside>
 
-          <section class="detail-pane">
+          <section id="detail-pane" class="detail-pane">
             <div id="detail-empty" class="detail-empty">
               <p>Select a patient from the queue to review their case.</p>
             </div>
@@ -209,6 +220,10 @@
     </main>
   </div>
 
+  <dialog id="document-image-dialog" class="document-image-dialog" aria-label="Original uploaded document">
+    <button id="close-document-image" class="btn-ghost document-image-close" type="button" aria-label="Close enlarged image">&#10005;</button>
+    <img id="document-image-dialog-image" alt="" />
+  </dialog>
   <script src="app.js"></script>
 </body>
 </html>

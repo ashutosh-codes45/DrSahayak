@@ -12,9 +12,16 @@ async function intake(req, res, next) {
 
 		const { patientId, language, patientName } = req.body;
 		const { transcript, mock, degraded: transcriptionDegraded } = await asr.transcribeAudio(req.file.path, language);
-		const structuredHistory = await llm.extractStructuredHistory(transcript, language);
+		const translationResult = transcriptionDegraded
+			? { translation: '', degraded: false }
+			: await llm.translateTranscriptToEnglish(transcript, language);
+		const englishTranslation = translationResult.translation;
+		const extractionTranscript = englishTranslation || transcript;
+		const extractionLanguage = englishTranslation ? 'en' : language;
+		const structuredHistory = await llm.extractStructuredHistory(extractionTranscript, extractionLanguage);
 		const historyDegraded = structuredHistory.confidence === 'extraction-failed';
-		const degraded = transcriptionDegraded || historyDegraded;
+		const translationDegraded = translationResult.degraded;
+		const degraded = transcriptionDegraded || translationDegraded || historyDegraded;
 		const urgency = triage.computeUrgency(structuredHistory);
 
 		let patient = patientId ? store.getPatient(patientId) : null;
@@ -26,8 +33,12 @@ async function intake(req, res, next) {
 			...existingPatient,
 			voiceIntake: {
 				transcript,
+				englishTranslation,
 				structuredHistory,
 				language: language || 'en',
+				fileName: req.file.originalname,
+				fileUrl: `/uploads/${encodeURIComponent(req.file.filename)}`,
+				mimeType: req.file.mimetype,
 				createdAt: new Date().toISOString(),
 			},
 			urgency,
@@ -39,6 +50,7 @@ async function intake(req, res, next) {
 			mock,
 			degraded,
 			transcriptionDegraded: Boolean(transcriptionDegraded),
+			translationDegraded: Boolean(translationDegraded),
 			historyDegraded,
 		});
 	} catch (error) {

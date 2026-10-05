@@ -165,6 +165,10 @@ h2 {
 
 /* Queue layout */
 .queue-layout { display: flex; gap: 18px; align-items: flex-start; }
+.patient-history-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; max-width: 680px; margin-bottom: 16px; }
+.patient-history-search .field { margin: 0; }
+.patient-history-search .btn-primary { min-height: 42px; }
+.patient-history-status { grid-column: 1 / -1; min-height: 18px; margin: 0; color: var(--muted); font-size: 13px; }
 .queue-list-pane {
   width: 320px;
   flex-shrink: 0;
@@ -175,6 +179,7 @@ h2 {
 }
 .pane-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .pane-header h2 { margin: 0; font-size: 18px; }
+.queue-actions { display: flex; align-items: center; gap: 7px; }
 .btn-ghost {
   border: 1px solid var(--border);
   background: transparent;
@@ -198,7 +203,14 @@ h2 {
 .queue-item:focus-visible { outline: 3px solid rgba(25, 122, 109, 0.3); outline-offset: 2px; }
 .queue-item.selected { border-color: var(--primary); background: var(--primary-tint); box-shadow: inset 3px 0 0 var(--primary); }
 .queue-item-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.queue-item .name { min-width: 0; font-weight: 650; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+.queue-item .name { min-width: 0; flex: 1; border: 0; padding: 0; background: transparent; color: var(--ink); text-align: left; font: inherit; font-weight: 650; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; cursor: pointer; }
+.queue-patient-button[aria-pressed="true"] { color: var(--primary-dark); }
+.delete-patient-button,
+.btn-danger { border: 1px solid #D8AAA5; border-radius: var(--radius); background: #FFF8F7; color: var(--danger); font: inherit; font-size: 11px; font-weight: 650; cursor: pointer; }
+.delete-patient-button { flex: 0 0 30px; width: 30px; height: 28px; padding: 0; font-size: 15px; line-height: 1; }
+.btn-danger { flex: 0 0 32px; width: 32px; height: 30px; padding: 0; font-size: 16px; line-height: 1; }
+.delete-patient-button:hover,
+.btn-danger:hover { background: #FBEDEB; border-color: var(--danger); }
 .queue-priority,
 .urgency-badge { display: inline-flex; align-items: center; flex: 0 0 auto; border-radius: 999px; font-weight: 650; }
 .queue-priority { padding: 3px 7px; font-size: 10px; line-height: 1.2; white-space: nowrap; }
@@ -244,6 +256,8 @@ h2 {
   border-bottom: 1px solid var(--border);
 }
 .patient-detail-header h2 { min-width: 0; margin: 0; font-size: 24px; overflow-wrap: anywhere; }
+.patient-detail-header h2 { flex: 1; }
+.patient-detail-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .detail-section { margin-bottom: 0; padding: 17px 0; border-bottom: 1px solid #E8EFEC; }
 .detail-section:last-child { border-bottom: 0; }
 .detail-section h3 {
@@ -256,7 +270,21 @@ h2 {
 }
 .detail-section > p { margin: 5px 0; font-size: 13px; }
 .detail-section > p strong { color: var(--ink); font-weight: 650; }
+.triage-emergency-notice { color: var(--danger); font-weight: 750; }
+.triage-reasons { margin: 4px 0 0; padding-left: 22px; font-size: 13px; }
 .detail-section .transcript-box { margin-top: 10px; }
+.voice-source-audio { display: block; width: min(100%, 520px); margin-top: 12px; }
+.document-record { padding: 12px 0; border-bottom: 1px solid #E8EFEC; }
+.document-record:last-child { border-bottom: 0; }
+.document-record.has-source { display: grid; grid-template-columns: minmax(0, 1fr) minmax(120px, 220px); align-items: start; gap: 16px; }
+.document-record-fields > p { margin: 5px 0; font-size: 13px; overflow-wrap: anywhere; }
+.document-thumbnail-button { display: block; width: 100%; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); cursor: zoom-in; }
+.document-thumbnail { display: block; width: 100%; max-height: 220px; object-fit: contain; }
+.document-original-link { color: var(--primary-dark); font-size: 13px; font-weight: 650; }
+.document-image-dialog { position: fixed; width: min(92vw, 1100px); max-width: none; max-height: 92vh; padding: 44px 12px 12px; overflow: visible; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.document-image-dialog::backdrop { background: rgba(14, 31, 27, 0.78); }
+.document-image-dialog > img { display: block; max-width: 100%; max-height: calc(92vh - 60px); margin: 0 auto; object-fit: contain; }
+.document-image-close { position: absolute; top: 8px; right: 8px; }
 .detail-content > h2 { margin-bottom: 14px; }
 .detail-empty p { max-width: 30ch; margin: 0 auto; }
 .detail-section .field-grid { gap: 12px 18px; }
@@ -387,8 +415,17 @@ h2 {
 .intake-edit-status.error,
 .intake-edit-warning { color: var(--danger); }
 .intake-edit-warning { margin: 0 0 10px; font-weight: 600; }
-.voice-intake-complaint,
-.voice-intake-urgency { margin: 8px 0; font-size: 13px; }
+.voice-intake-complaint { margin: 8px 0; font-size: 13px; }
+.voice-intake-triage { margin: 10px 0; padding: 10px 12px; border-left: 4px solid; border-radius: 0 4px 4px 0; }
+.voice-intake-triage.critical { border-color: #C53B35; background: #FBEDEB; color: #70231F; }
+.voice-intake-triage.high { border-color: #D36B22; background: #FFF3E9; color: #71370F; }
+.voice-intake-triage.medium { border-color: #D6A72E; background: #FFF9E6; color: #59450D; }
+.voice-intake-triage.low { border-color: #3E8A68; background: #EEF7F1; color: #285A43; }
+.voice-intake-urgency { margin: 0 0 4px; font-size: 14px; font-weight: 750; }
+.voice-intake-score,
+.voice-intake-reasons-heading { margin: 3px 0; font-size: 13px; font-weight: 650; }
+.voice-intake-reasons { margin: 4px 0 0; padding-left: 20px; font-size: 13px; }
+.voice-intake-emergency { margin: 0 0 8px; font-weight: 750; }
 .intake-summary-panel {
   margin-top: 14px;
   padding-top: 14px;
@@ -908,6 +945,8 @@ h2 {
   .preview-actions { flex-direction: column; }
   .preview-actions .btn-primary,
   .preview-actions .btn-secondary { flex: auto; width: 100%; }
+  .document-record.has-source { grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
+  .document-thumbnail { max-height: 160px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

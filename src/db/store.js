@@ -63,4 +63,19 @@ function updatePatient(id, updaterFn) {
 	return updatedPatient;
 }
 
-module.exports = { listPatients, getPatient, createPatient, updatePatient };
+function deletePatient(id) {
+	const patients = readAll();
+	const remainingPatients = patients.filter((patient) => patient.id !== id);
+	if (remainingPatients.length === patients.length) {
+		return false;
+	}
+
+	writeAll(remainingPatients);
+	return true;
+}
+
+function deleteAllPatients() {
+	writeAll([]);
+}
+
+module.exports = { listPatients, getPatient, createPatient, updatePatient, deletePatient, deleteAllPatients };

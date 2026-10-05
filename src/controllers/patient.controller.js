@@ -19,6 +19,19 @@ function create(req, res) {
 	return ok(res, patient, 201);
 }
 
+function remove(req, res) {
+	if (!store.deletePatient(req.params.id)) {
+		return fail(res, 'Patient not found', 404);
+	}
+	return ok(res, { deleted: true });
+}
+
+function deleteAll(req, res) {
+	const deletedCount = store.listPatients().length;
+	store.deleteAllPatients();
+	return ok(res, { deletedCount });
+}
+
 function updateIntake(req, res) {
 	const patient = store.getPatient(req.params.id);
 	if (!patient) {
@@ -68,4 +81,4 @@ function updateIntake(req, res) {
 	return ok(res, { patient: updatedPatient });
 }
 
-module.exports = { list, getById, create, updateIntake };
+module.exports = { list, getById, create, remove, deleteAll, updateIntake };

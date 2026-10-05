@@ -83,6 +83,39 @@ async function extractStructuredHistory(transcript, language) {
 	}
 }
 
+async function translateTranscriptToEnglish(transcript, language) {
+	if (language === 'en') {
+		return { translation: transcript, mock: false, degraded: false };
+	}
+	if (!config.geminiApiKey) {
+		return {
+			translation: 'I have had a fever and headache since yesterday.',
+			mock: true,
+			degraded: false,
+		};
+	}
+
+	const languageNames = {
+		hi: 'Hindi',
+		bn: 'Bengali',
+		te: 'Telugu',
+		mr: 'Marathi',
+		ta: 'Tamil',
+	};
+	const sourceLanguage = languageNames[language] || 'the language used in the transcript';
+	const systemPrompt = `Translate the following patient transcript from ${sourceLanguage} into English. Preserve all stated symptoms, timing, negation, uncertainty, and speaker perspective. Do not add details. Return only the English translation, with no labels, explanation, or markdown.`;
+	try {
+		const translation = await callGemini(systemPrompt, transcript);
+		if (!translation) {
+			throw new Error('Gemini returned an empty translation');
+		}
+		return { translation, mock: false, degraded: false };
+	} catch (error) {
+		console.error('[llm translation]', error.message);
+		return { translation: '', mock: false, degraded: true };
+	}
+}
+
 async function generateSummary(structuredHistory, documents) {
 	if (!config.geminiApiKey) {
 		return {
@@ -108,4 +141,4 @@ async function generateSummary(structuredHistory, documents) {
 	}
 }
 
-module.exports = { extractStructuredHistory, generateSummary };
+module.exports = { extractStructuredHistory, translateTranscriptToEnglish, generateSummary };

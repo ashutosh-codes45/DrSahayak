@@ -6,5 +6,13 @@
     "passwordHash": "$2a$10$2X.knw/9ihtVG83hsowZyOYoR//mGgN6lHxBvZuhmKo9AF5BZnayy",
     "role": "doctor",
     "createdAt": "2026-10-04T09:38:55.197Z"
+  },
+  {
+    "id": "dd4c4b5c-4ded-4875-a9e9-50984d832a9a",
+    "name": "patient 1",
+    "email": "hackerindian1010@gmail.com",
+    "passwordHash": "$2a$10$0uXBeW1mhjF6ENci3lSuQ.B2WxIDHn/vPNF0kLaORax2w2dI8zqE.",
+    "role": "patient",
+    "createdAt": "2026-10-05T06:26:44.503Z"
   }
 ]

@@ -20,4 +20,13 @@ function requireAuth(req, res, next) {
 	return next();
 }
 
-module.exports = { requireAuth };
+function requireRole(...allowedRoles) {
+	return function authorizeRole(req, res, next) {
+		if (!req.user || !allowedRoles.includes(req.user.role)) {
+			return fail(res, 'You are not authorized to access this resource', 403);
+		}
+		return next();
+	};
+}
+
+module.exports = { requireAuth, requireRole };
